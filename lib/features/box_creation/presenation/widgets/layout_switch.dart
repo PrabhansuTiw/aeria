@@ -13,10 +13,11 @@ class LayoutSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        const Text('C-Shape Layout'),
+        const Text('Grid'),
         Switch(value: isCShape, onChanged: onToggle),
-        const Text('Grid Layout'),
+        const Text('C-Shape'),
       ],
     );
   }

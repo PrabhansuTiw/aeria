@@ -19,11 +19,12 @@ class BoxWidget extends StatelessWidget {
       child: Container(
         width: size.width,
         height: size.height,
-        margin: const EdgeInsets.all(4),
+        margin: const EdgeInsets.all(2.5),
         decoration: BoxDecoration(
           color: isGreen ? Colors.green : Colors.red,
           borderRadius: BorderRadius.circular(6),
         ),
+        // child: Text("$size"),
       ),
     );
   }

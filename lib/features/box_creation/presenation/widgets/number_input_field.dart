@@ -7,8 +7,10 @@ class NumberInputField extends StatelessWidget {
     required this.controller,
     required this.onSubmitted,
     required this.onGenerate,
+    required this.validated,
   });
 
+  final bool validated;
   final GlobalKey<FormState> formKey;
   final TextEditingController controller;
   final ValueChanged<String> onSubmitted;
@@ -21,15 +23,20 @@ class NumberInputField extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: TextFormField(
-              controller: controller,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Enter number (5–25)',
-                border: OutlineInputBorder(),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: controller,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText:
+                      validated ? 'Enter number (5-25)' : "Enter a number",
+                  border: OutlineInputBorder(),
+                ),
+                // validator: _validateCount,
+                onFieldSubmitted: onSubmitted,
+                validator: validated ? _validateCount : null,
               ),
-              validator: _validateCount,
-              onFieldSubmitted: onSubmitted,
             ),
           ),
           const SizedBox(width: 10),

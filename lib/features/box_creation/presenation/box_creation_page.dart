@@ -4,6 +4,7 @@ import 'package:aeria/features/box_creation/presenation/widgets/box_widget.dart'
 import 'package:aeria/features/box_creation/presenation/widgets/c_shape_builder.dart';
 import 'package:aeria/features/box_creation/presenation/widgets/layout_switch.dart';
 import 'package:aeria/features/box_creation/presenation/widgets/number_input_field.dart';
+import 'package:aeria/features/box_creation/presenation/widgets/validation_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,6 +31,7 @@ class _BoxCreationViewState extends State<_BoxCreationView> {
   final _numberFormKey = GlobalKey<FormState>();
   final _countController = TextEditingController();
   bool _isCShape = true;
+  bool _validation = true;
 
   @override
   void dispose() {
@@ -50,45 +52,63 @@ class _BoxCreationViewState extends State<_BoxCreationView> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Square Boxes')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            NumberInputField(
-              formKey: _numberFormKey,
-              controller: _countController,
-              onSubmitted: (_) => _onGeneratePressed(cubit),
-              onGenerate: () => _onGeneratePressed(cubit),
-            ),
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              NumberInputField(
+                validated: _validation,
+                formKey: _numberFormKey,
+                controller: _countController,
+                onSubmitted: (_) => _onGeneratePressed(cubit),
+                onGenerate: () => _onGeneratePressed(cubit),
+              ),
 
-            const SizedBox(height: 20),
-
-            LayoutSwitch(
-              isCShape: _isCShape,
-              onToggle: (v) => setState(() => _isCShape = v),
-            ),
-
-            const SizedBox(height: 10),
-
-            Expanded(
-              child: BlocBuilder<BoxCreationCubit, BoxCreationState>(
-                builder: (context, state) {
-                  return Center(
-                    child:
-                        _isCShape
+              Divider(),
+              SizedBox(
+                height: 25,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    LayoutSwitch(
+                      isCShape: _isCShape,
+                      onToggle: (v) => setState(() => _isCShape = v),
+                    ),
+                    VerticalDivider(),
+                    ValidationSwitch(
+                      validationNeeded: _validation,
+                      onValidate: (v) => setState(() => _validation = v),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(),
+              Expanded(
+                child: BlocBuilder<BoxCreationCubit, BoxCreationState>(
+                  builder: (context, state) {
+                    return LayoutBuilder(
+                      builder: (context, constraints) {
+                        final maxWidth = constraints.maxWidth;
+                        return _isCShape
                             ? CShapeBuilder(
                               state: state,
+                              maxWidth: maxWidth,
                               onBoxTap: cubit.toggleColor,
                             )
                             : GridBuilder(
                               state: state,
+                              // maxWidth: maxWidth,
                               onBoxTap: cubit.toggleColor,
-                            ),
-                  );
-                },
+                            );
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

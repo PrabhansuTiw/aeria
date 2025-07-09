@@ -5,10 +5,6 @@ class BoxCreationCubit extends Cubit<BoxCreationState> {
   BoxCreationCubit() : super(BoxCreationState.initial());
 
   void setBoxCount(int count) {
-    if (count < 5 || count > 25) {
-      emit(state.copyWith(error: 'Enter number between 5 and 25'));
-      return;
-    }
     emit(
       BoxCreationState(
         count: count,
